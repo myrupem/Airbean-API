@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import errorHandler from "./middlewares/errorHandler.js";
+import logger from './middlewares/logger.js';
 
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
@@ -12,6 +13,7 @@ const database = mongoose.connection;
 
 // middleware
 app.use(express.json());
+app.use(logger);
 
 // routes
 
