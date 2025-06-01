@@ -2,6 +2,8 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
+import cartRouter from './routes/cart.js'
+
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
 const app = express(); // Detta skapar upp en express-applikation
@@ -13,6 +15,7 @@ const database = mongoose.connection;
 app.use(express.json());
 
 // routes
+app.use('/api/cart', cartRouter)
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
