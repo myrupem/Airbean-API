@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import menuRoutes from "./routes/menu.js";
+import orderRouter from "./routes/order.js";
 
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
@@ -15,6 +16,9 @@ app.use(express.json());
 
 // routes
 app.use("/api/menu", menuRoutes);
+
+// Order routes
+app.use("/api/orders", orderRouter);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
