@@ -1,6 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import errorHandler from "./middlewares/errorHandler.js";
+import logger from './middlewares/logger.js';
+import authRoutes from "./routes/auth.js";
 
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
@@ -11,8 +14,13 @@ const database = mongoose.connection;
 
 // middleware
 app.use(express.json());
+app.use(logger);
+
+// Global user: 
+global.user = null; // Lagra den inloggade användaren globalt
 
 // routes
+app.use("/api/auth", authRoutes);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
@@ -24,3 +32,6 @@ database.once("connected", () => {
     console.log(`Server is running on port ${PORT}`);
   });
 });
+
+// errorHandling
+app.use(errorHandler);
