@@ -26,7 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
 
 // Order routes
-app.use("/api/orders", orderRouter);
+app.use("/api/order", orderRouter);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);

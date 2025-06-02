@@ -5,6 +5,7 @@ const router = Router();
 
 router.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
+  console.log(`Fetching orders for user ID: ${userId}`);
   const orders = await getOrdersByUserId(userId);
 
   if (orders) {
