@@ -1,6 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import authRoutes from "./routes/auth.js";
 
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
@@ -12,7 +13,11 @@ const database = mongoose.connection;
 // middleware
 app.use(express.json());
 
+// Global user: 
+global.user = null; // Lagra den inloggade användaren globalt
+
 // routes
+app.use("/api/auth", authRoutes);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
