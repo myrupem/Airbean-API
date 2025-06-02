@@ -1,29 +1,23 @@
 import mongoose from 'mongoose';
-import product from 'product'
+import productSchema from '../models/product.js';
 
 const Schema = mongoose.Schema;
 
+const cartItemSchema = new Schema({
+  cartId: { 
+    type: String, 
+    required: true, 
+    unique: true 
+  },
+  products: {
+    type: [productSchema],
+    default: []
+  }
+});
+
 const cartSchema = new Schema({
-    title : {
-        type : String,
-        required : true,
-        maxlength : 15
-    }, 
-    text : {
-        type : String,
-        required : true,
-        minlength : 15
-    },
-    cartId : {
-        type : String,
-        required : true,
-        unique : true
-    }, 
-    userId : {
-        type : String,
-        required : true
-    }
-}, { timestamps : true });
+  carts: [cartItemSchema]
+}, { timestamps: true });
 
 const Cart = mongoose.model('Cart', cartSchema);
 

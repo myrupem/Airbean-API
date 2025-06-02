@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getPostsByUserId } from '../services/posts.js';
+import { getCartByCartId } from '../services/cart.js';
 
 const router = Router();
 
