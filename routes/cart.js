@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { getCartByCartId } from '../services/cart.js';
+import { getOrCreateCart } from '../services/cart.js';
 
 const router = Router();
 
 // GET cart by cartID
 router.get('/:cartId', async (req, res, next) => {
     const { cartId } = req.params;
-    const cart = await getCartByCartId(cartId);
+    const cart = await getOrCreateCart(cartId);
     if(cart) {
         res.json({
             success : true,
