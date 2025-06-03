@@ -5,6 +5,8 @@ import errorHandler from "./middlewares/errorHandler.js";
 import logger from './middlewares/logger.js';
 import authRoutes from "./routes/auth.js";
 
+import cartRouter from './routes/cart.js'
+
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
 const app = express(); // Detta skapar upp en express-applikation
@@ -20,7 +22,9 @@ app.use(logger);
 global.user = null; // Lagra den inloggade användaren globalt
 
 // routes
+app.use('/api/cart', cartRouter)
 app.use("/api/auth", authRoutes);
+
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
