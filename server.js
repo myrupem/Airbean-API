@@ -2,10 +2,10 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import errorHandler from "./middlewares/errorHandler.js";
-import logger from './middlewares/logger.js';
+import logger from "./middlewares/logger.js";
 import authRoutes from "./routes/auth.js";
 import menuRoutes from "./routes/menu.js";
-
+import orderRouter from "./routes/order.js";
 import cartRouter from './routes/cart.js'
 
 // configuration
@@ -19,13 +19,14 @@ const database = mongoose.connection;
 app.use(express.json());
 app.use(logger);
 
-// Global user: 
+// Global user:
 global.user = null; // Lagra den inloggade användaren globalt
 
 // routes
 app.use('/api/cart', cartRouter)
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
+app.use("/api/order", orderRouter);
 
 
 database.on("error", (error) => {
