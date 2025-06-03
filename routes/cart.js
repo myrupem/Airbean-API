@@ -5,7 +5,7 @@ import { getOrCreateCart } from '../services/cart.js';
 
 const router = Router();
 
-// GET cart by cartID
+// GET cart by cartId
 router.get('/:cartId', async (req, res, next) => {
     const { cartId } = req.params;
     const cart = await getOrCreateCart(cartId);
