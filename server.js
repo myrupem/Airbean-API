@@ -1,9 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+
 import errorHandler from "./middlewares/errorHandler.js";
-import logger from './middlewares/logger.js';
+import logger from "./middlewares/logger.js";
+
 import authRoutes from "./routes/auth.js";
+import cartRoutes from "./routes/cart.js";
+import menuRoutes from './routes/menu.js';
+import orderRoutes from "./routes/order.js";
 
 // configuration
 dotenv.config(); // Detta laddar miljövariabler från en .env-fil
@@ -16,11 +21,14 @@ const database = mongoose.connection;
 app.use(express.json());
 app.use(logger);
 
-// Global user: 
+// Global user:
 global.user = null; // Lagra den inloggade användaren globalt
 
 // routes
+app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
+app.use('/api/menu', menuRoutes);
+app.use("/api/order", orderRoutes);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
