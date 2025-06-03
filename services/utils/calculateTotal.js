@@ -1,3 +1,7 @@
 export default function calculateTotal(items) {
-  return items.reduce((sum, item) => sum + item.price * item.qty, 0);
+  if (!Array.isArray(items)) return 0;
+
+  return items.reduce((sum, item) => {
+    return sum + (item.qty * item.price || 0);
+  }, 0);
 }

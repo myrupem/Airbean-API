@@ -14,6 +14,10 @@ const cartSchema = new Schema({
         type : String,
         default : null
     },
+    userId: {
+        type: String,
+        required: true
+    },
     items : [cartItemSchema]
 });
 
