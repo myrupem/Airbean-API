@@ -1,10 +1,15 @@
 import { Router } from "express";
+
 import {
   getOrderByUserId,
   createOrder,
   getAllOrders,
 } from "../services/order.js";
-import { getOrCreateCart } from "../services/cart.js";
+import calculateTotal from "../services/utils/calculateTotal.js";
+
+import Cart from "../models/cart.js";
+import Order from "../models/order.js";
+import { getCart } from "../services/cart.js";
 
 const router = Router();
 
@@ -56,7 +61,7 @@ router.post("/", async (req, res, next) => {
   try {
     console.log(`Received request to create order for cart ID: ${cartId}`);
 
-    const cart = await getOrCreateCart(cartId);
+    const cart = await getCart(cartId);
 
     const order = await createOrder(cart.cartId);
 
@@ -73,6 +78,39 @@ router.post("/", async (req, res, next) => {
       status: 500,
       message: "Error creating order",
       error: error.message + "eeee",
+    });
+  }
+});
+
+router.post("/", async (req, res) => {
+  const { cartId } = req.body;
+
+  try {
+    const cart = await Cart.findOne({ cartId });
+
+    if (!cart) {
+      return res.status(404).json({
+        success: false,
+        message: "Cart not found.",
+      });
+    }
+
+    // Skapa en order baserat på cart
+    const order = await Order.create({
+      userId: cart.userId,
+      items: cart.items,
+      total: calculateTotal(cart.items),
+    });
+
+    res.status(201).json({
+      success: true,
+      order,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong.",
     });
   }
 });
