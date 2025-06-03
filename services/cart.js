@@ -1,33 +1,34 @@
 import Cart from '../models/cart.js';
-import { v4 as uuidv4 } from 'uuid';
 
-export async function getOrCreateCart(cartId) {
-    try {
-        let cart = await Cart.findOne({ cartId : cartId });
-        if(!cart) {
-            cart = await Cart.create({
-                cartId : cartId,
-                items : []
-            });
-        }
-        return cart;
-    }catch(error) {
-        console.log('Something went wrong!');
-        console.log(error.message);
-        return null;
-    }
+import { generatePrefixedId } from './utils/IdGenerator.js';
+
+export async function getCart(cartId) {
+  try {
+    const cart = await Cart.findOne({ cartId });
+      if (!cart) {
+        throw new Error(`Cart with id ${cartId} not found.`);
+      }
+    return cart;
+  } catch (error) {
+    console.log('Something went wrong!');
+    console.log(error.message);
+    throw error; 
+  }
 }
 
 export const updateCart = async (req, res, next) => {
   try {
     const { prodId, qty, guestId } = req.body;
-    const userId = global.user?.userId || guestId || `guest-${uuidv4()}`;
+    const userId = global.user?.userId || guestId || `${generatePrefixedId("guest")}`;
 
-    let cart = await Cart.findOne({ userId });
+     // Byt ut prefixet 'user-' eller 'guest-' mot 'cart-'
+    const cartId = userId.replace(/^(user|guest)-/, 'cart-');
+
+    let cart = await Cart.findOne({ cartId });
 
     if (!cart) {
       cart = new Cart({
-        cartId: `cart-${uuidv4()}`,
+        cartId: cartId,
         userId,
         items: []
       });
