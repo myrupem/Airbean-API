@@ -2,6 +2,8 @@
 import Order from "../models/order.js";
 import Cart from "../models/cart.js";
 
+// import { matchPromotions } from "./matchPromotions.js";
+
 // Get all orders
 export async function getAllOrders() {
   try {
@@ -23,8 +25,7 @@ export async function getOrderByUserId(userId) {
   }
 }
 
-// Create a new order
-
+//Create a new order
 export async function createOrder(cartId) {
   try {
     let cart = await Cart.findOne({ cartId: cartId });
