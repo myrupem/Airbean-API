@@ -1,4 +1,3 @@
-// middlewares/validateCartInput.js
 import Menu from '../models/Menu.js';
 
 export const validateCartInput = async (req, res, next) => {

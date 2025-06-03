@@ -1,3 +1,5 @@
+import { updateCart } from '../services/cart.js';
+import { validateCartInput } from '../middlewares/validateCartInput.js';
 import { Router } from 'express';
 import { getOrCreateCart } from '../services/cart.js';
 
@@ -19,5 +21,9 @@ router.get('/:cartId', async (req, res, next) => {
         });
     }
 });
+
+// PUT cart
+router.put('/', validateCartInput, updateCart);
+
 
 export default router;
