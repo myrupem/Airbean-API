@@ -1,10 +1,8 @@
 import express from "express";
 import User from "../models/user.js";
-import { v4 as uuidv4 } from "uuid";
+import { generatePrefixedId } from "../services/utils/IdGenerator.js";
 
 const router = express.Router();
-
-
 
 // REGISTER
 // POST /api/auth/register
@@ -17,11 +15,12 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "Användarnamnet är redan taget" });
     }
 
-    const userId = uuidv4().slice(0, 5);
+    const userId = generatePrefixedId("user");
     const newUser = await User.create({
       userId,
       username,
       password,
+      role: "user",
     });
 
     res.status(201).json({
@@ -35,25 +34,42 @@ router.post("/register", async (req, res) => {
   }
 });
 
-// LOGIN
+// LOGIN (eller fortsätt som gäst)
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, continueAsGuest } = req.body;
+
+  if (continueAsGuest) {
+    const guestId = generatePrefixedId("guest");
+    global.user = {
+      userId: guestId,
+      username: "Gäst",
+      role: "guest",
+    };
+
+    return res.json({
+      message: "Fortsätter som gäst",
+      user: global.user,
+    });
+  }
 
   try {
     const user = await User.findOne({ username });
-
     if (!user || user.password !== password) {
       return res
         .status(401)
         .json({ message: "Felaktigt användarnamn eller lösenord" });
     }
 
-    global.user = user;
+    global.user = {
+      userId: user.userId,
+      username: user.username,
+      role: user.role,
+    };
 
     res.json({
       message: "Inloggning lyckades",
-      userId: user.userId,
+      user: global.user,
     });
   } catch (err) {
     res.status(500).json({ message: "Fel vid inloggning", error: err.message });
@@ -64,7 +80,7 @@ router.post("/login", async (req, res) => {
 // GET /api/auth/logout
 router.get("/logout", (req, res) => {
   global.user = null;
-  res.json({ message: "Utloggad, ingen användare inloggad" });
+  res.json({ message: "Utloggning lyckades!" });
 });
 
 export default router;

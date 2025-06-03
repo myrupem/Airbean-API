@@ -1,15 +1,16 @@
-import express from 'express';
-import Menu from '../models/Menu.js';
+import express from "express";
+import { getAllProducts } from "../services/products.js";
 
 const router = express.Router();
 
-// GET /api/menu
-router.get('/', async (req, res, next) => {
+router.get("/", async (req, res) => {
   try {
-    const menu = await Menu.find();
-    res.json(menu);
-  } catch (err) {
-    next(err);
+    const products = await getAllProducts();
+    res.status(200).json(products);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error retrieving menu", error: error.message });
   }
 });
 
