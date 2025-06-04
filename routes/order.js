@@ -54,34 +54,6 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
-// POST create order - /api/orders
-router.post("/", async (req, res, next) => {
-  const { cartId } = req.body;
-
-  try {
-    console.log(`Received request to create order for cart ID: ${cartId}`);
-
-    const cart = await getCart(cartId);
-
-    const order = await createOrder(cart.cartId);
-
-    if (order && order._id) {
-      res.json({ success: true, order });
-    } else {
-      next({
-        status: 500,
-        message: "Order creation failed",
-      });
-    }
-  } catch (error) {
-    next({
-      status: 500,
-      message: "Error creating order",
-      error: error.message + "eeee",
-    });
-  }
-});
-
 router.post("/", async (req, res) => {
   const { cartId } = req.body;
 
