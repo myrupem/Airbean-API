@@ -5,7 +5,7 @@ import {
   createOrder,
   getAllOrders,
 } from "../services/order.js";
-import calculateTotal from "../services/utils/calculateTotal.js";
+import calculateTotal from "../utils/calculateTotal.js";
 
 import Cart from "../models/cart.js";
 import Order from "../models/order.js";

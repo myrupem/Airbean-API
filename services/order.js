@@ -23,8 +23,7 @@ export async function getOrderByUserId(userId) {
   }
 }
 
-// Create a new order
-
+//Create a new order
 export async function createOrder(cartId) {
   try {
     let cart = await Cart.findOne({ cartId: cartId });
