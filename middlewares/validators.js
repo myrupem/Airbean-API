@@ -73,26 +73,35 @@ export async function validateUser(req, res, next) {
         });
     }
 
-    try {
-        const user = await User.findOne({ userId: userId });
-        if (!user) {
-            return res.status(404).json({
+    if (userId.startsWith('guest-')) {
+        return next();
+    }
+
+    if (userId.startsWith('user-')) {
+        try {
+            const user = await User.findOne({ userId: userId });
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found'
+                });
+            }
+            return next();
+
+        } catch (error) {
+            return res.status(500).json({
                 success: false,
-                message: 'User not found'
+                message: 'Database error',
+                error: error.message
             });
         }
-
-        next();
-
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: 'Database error',
-            error: error.message
-        });
     }
-}
 
+    return res.status(400).json({
+        success: false,
+        message: 'Invalid userId prefix'
+    });
+}
 
 export async function validateCartInBody(req, res, next) {
     const { cartId } = req.body;
