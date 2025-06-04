@@ -2,8 +2,6 @@
 import Order from "../models/order.js";
 import Cart from "../models/cart.js";
 
-// import { matchPromotions } from "./matchPromotions.js";
-
 // Get all orders
 export async function getAllOrders() {
   try {
