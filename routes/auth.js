@@ -1,6 +1,6 @@
 import express from "express";
 import User from "../models/user.js";
-import { generatePrefixedId } from "../services/utils/IdGenerator.js";
+import { generatePrefixedId } from "../utils/IdGenerator.js";
 import { createUser, findUserByUsername } from "../services/user.js";
 
 const router = express.Router();
