@@ -42,7 +42,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // GET orders by user ID - /api/orders/:userId
-router.get("/:userId", async (req, res, next) => {
+router.get("/:userId", validateUser, async (req, res, next) => {
   const { userId } = req.params;
   console.log(`Fetching orders for user ID: ${userId}`);
 

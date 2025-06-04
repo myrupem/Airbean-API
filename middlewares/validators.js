@@ -74,7 +74,7 @@ export async function validateUser(req, res, next) {
     }
 
     try {
-        const user = await User.findOne( {userId: userId });
+        const user = await User.findOne({ userId: userId });
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -152,4 +152,52 @@ export async function validateCartInUrl(req, res, next) {
             error: error.message
         });
     }
+}
+
+export function validatePromotion(req, res, next) {
+    const { title, description, requiredItems, discountType, discountValue, isActive } = req.body;
+
+    if (!title) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing title'
+        });
+    }
+
+    if (!description) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing description'
+        });
+    }
+
+    if (!requiredItems || requiredItems.length < 2) {
+        return res.status(400).json({
+            success: false,
+            message: 'requiredItems must exist and contain atleast 2 items'
+        });
+    }
+
+    if (!discountType) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing discountType'
+        });
+    }
+
+    if (!discountValue) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing discountValue'
+        });
+    }
+
+    if (isActive === undefined) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing isActive'
+        });
+    }
+
+    next();
 }
