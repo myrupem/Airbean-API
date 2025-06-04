@@ -6,9 +6,12 @@ import calculateTotal from "../services/utils/calculateTotal.js";
 import Cart from "../models/cart.js";
 import Order from '../models/order.js';
 
+import { validateCartInBody } from "../middlewares/validators.js";
+import { validateUser } from "../middlewares/validators.js";
+
 const router = Router();
 
-router.get("/:userId", async (req, res, next) => {
+router.get("/:userId", validateUser, async (req, res, next) => {
   const { userId } = req.params;
   console.log(`Fetching orders for user ID: ${userId}`);
   const orders = await getOrdersByUserId(userId);
@@ -23,7 +26,7 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", validateCartInBody, async (req, res) => {
   const { cartId } = req.body;
 
   try {
