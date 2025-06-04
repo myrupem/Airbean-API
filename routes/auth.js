@@ -1,6 +1,7 @@
 import express from "express";
 import User from "../models/user.js";
-import { generatePrefixedId } from "../services/utils/IdGenerator.js";
+import { generatePrefixedId } from "../utils/IdGenerator.js";
+import { createUser, findUserByUsername } from "../services/user.js";
 
 import { validateAuthBody } from "../middlewares/validators.js";
 
@@ -12,13 +13,13 @@ router.post("/register", validateAuthBody, async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const existingUser = await User.findOne({ username });
+    const existingUser = await findUserByUsername(username);
     if (existingUser) {
       return res.status(400).json({ message: "Användarnamnet är redan taget" });
     }
 
     const userId = generatePrefixedId("user");
-    const newUser = await User.create({
+    const newUser = await createUser({
       userId,
       username,
       password,

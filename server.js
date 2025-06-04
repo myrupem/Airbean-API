@@ -7,7 +7,8 @@ import logger from "./middlewares/logger.js";
 
 import authRoutes from "./routes/auth.js";
 import cartRoutes from "./routes/cart.js";
-import menuRoutes from './routes/menu.js';
+import menuRoutes from "./routes/menu.js";
+import promotionRoutes from "./routes/promotions.js";
 import orderRoutes from "./routes/order.js";
 
 // configuration
@@ -27,8 +28,9 @@ global.user = null; // Lagra den inloggade användaren globalt
 // routes
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
-app.use('/api/menu', menuRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/menu", menuRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/promotions", promotionRoutes);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);

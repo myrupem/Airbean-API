@@ -1,22 +1,53 @@
 import { Router } from "express";
 
-import { getOrdersByUserId } from "../services/order.js";
-import calculateTotal from "../services/utils/calculateTotal.js";
+import {
+  getOrderByUserId,
+  createOrder,
+  getAllOrders,
+} from "../services/order.js";
+import calculateTotal from "../utils/calculateTotal.js";
 
 import Cart from "../models/cart.js";
-import Order from '../models/order.js';
+import Order from "../models/order.js";
+import { getCart } from "../services/cart.js";
 
 import { validateCartInBody } from "../middlewares/validators.js";
 import { validateUser } from "../middlewares/validators.js";
 
 const router = Router();
 
-router.get("/:userId", validateUser, async (req, res, next) => {
+// GET all orders - /api/orders
+router.get("/", async (req, res, next) => {
+  try {
+    const orders = await getAllOrders();
+    if (orders && orders.length > 0) {
+      res.json({
+        success: true,
+        orders,
+        count: orders.length,
+      });
+    } else {
+      next({
+        status: 404,
+        message: "No orders found",
+      });
+    }
+  } catch (error) {
+    next({
+      status: 500,
+      message: "Error fetching orders",
+      error: error.message,
+    });
+  }
+});
+
+// GET orders by user ID - /api/orders/:userId
+router.get("/:userId", async (req, res, next) => {
   const { userId } = req.params;
   console.log(`Fetching orders for user ID: ${userId}`);
-  const orders = await getOrdersByUserId(userId);
 
-  if (orders) {
+  const orders = await getOrderByUserId(userId);
+  if (orders && orders.length > 0) {
     res.json({ success: true, orders });
   } else {
     next({
@@ -43,7 +74,7 @@ router.post("/", validateCartInBody, async (req, res) => {
     const order = await Order.create({
       userId: cart.userId,
       items: cart.items,
-      total: calculateTotal(cart.items)
+      total: calculateTotal(cart.items),
     });
 
     res.status(201).json({

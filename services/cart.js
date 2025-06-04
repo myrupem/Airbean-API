@@ -1,18 +1,18 @@
-import Cart from '../models/cart.js';
+import Cart from "../models/cart.js";
 
-import { generatePrefixedId } from './utils/IdGenerator.js';
+import { generatePrefixedId } from "../utils/IdGenerator.js";
 
 export async function getCart(cartId) {
   try {
     const cart = await Cart.findOne({ cartId });
-      if (!cart) {
-        throw new Error(`Cart with id ${cartId} not found.`);
-      }
+    if (!cart) {
+      throw new Error(`Cart with id ${cartId} not found.`);
+    }
     return cart;
   } catch (error) {
-    console.log('Something went wrong!');
+    console.log("Something went wrong!");
     console.log(error.message);
-    throw error; 
+    throw error;
   }
 }
 
