@@ -1,6 +1,8 @@
 // services/order.js
 import Order from "../models/order.js";
 import Cart from "../models/cart.js";
+import calculateTotal from "../utils/calculateTotal.js";
+import { generatePrefixedId } from "../utils/IdGenerator.js";
 
 // Get all orders
 export async function getAllOrders() {
@@ -23,32 +25,37 @@ export async function getOrderByUserId(userId) {
   }
 }
 
-//Create a new order
+ //Create a new order
 export async function createOrder(cartId) {
+  if (!cartId) throw new Error("Missing cartId");
+
   try {
-    let cart = await Cart.findOne({ cartId: cartId });
-    console.log("Cart found: in", cart);
-    if (!cart) {
+    let cart = await Cart.findOne({ cartId });
+    
+    if (!cart || cart.items.length === 0) {
       console.error("Cart not found or is empty for cartId:", cartId);
       throw new Error("Cart not found or is empty");
     }
 
-    const total = cart.items.reduce(
-      (sum, item) => sum + item.price * item.qty,
-      0
-    );
-    console.log("userId", cart.userId);
+    const total = calculateTotal(cart.items);
+     // Byt ut prefixet 'user-' eller 'guest-' mot 'order-'
+    const orderId = generatePrefixedId('order');
 
     const newOrder = new Order({
-      orderId: `order-${Math.random().toString(36).substr(2, 9)}`,
+      orderId: orderId,
       userId: cart.userId,
       items: cart.items,
       total,
     });
 
-    return await newOrder.save();
+    await newOrder.save();
+    //Töm kundvagn
+    cart.items = []
+    await cart.save()
+
+    return newOrder
   } catch (error) {
     console.error("Error creating order:", error.message);
     throw error;
   }
-}
+} 

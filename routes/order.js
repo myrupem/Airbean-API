@@ -1,15 +1,7 @@
 import { Router } from "express";
 
-import {
-  getOrderByUserId,
-  createOrder,
-  getAllOrders,
-} from "../services/order.js";
-import calculateTotal from "../utils/calculateTotal.js";
-
-import Cart from "../models/cart.js";
-import Order from "../models/order.js";
-import { getCart } from "../services/cart.js";
+import { getOrderByUserId, getAllOrders } from "../services/order.js";
+import { createOrder } from "../services/order.js";
 
 const router = Router();
 
@@ -54,35 +46,21 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
+//Create order route
 router.post("/", async (req, res) => {
   const { cartId } = req.body;
 
   try {
-    const cart = await Cart.findOne({ cartId });
-
-    if (!cart) {
-      return res.status(404).json({
-        success: false,
-        message: "Cart not found.",
-      });
-    }
-
-    // Skapa en order baserat på cart
-    const order = await Order.create({
-      userId: cart.userId,
-      items: cart.items,
-      total: calculateTotal(cart.items),
-    });
-
+    const order = await createOrder(cartId);
     res.status(201).json({
       success: true,
       order,
     });
   } catch (err) {
     console.error(err);
-    res.status(500).json({
+    res.status(400).json({
       success: false,
-      message: "Something went wrong.",
+      message: err.message,
     });
   }
 });

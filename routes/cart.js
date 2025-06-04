@@ -9,15 +9,16 @@ const router = Router();
 router.get('/:cartId', async (req, res, next) => {
     const { cartId } = req.params;
     const cart = await getCart(cartId);
-    if(cart) {
-        res.json({
-            success : true,
-            cart : cart
+
+    if (!cart) {
+        next({
+        status: 404,
+        message: 'No cart found!'
         });
     } else {
-        next({
-            status : 404,
-            message : 'No cart found!'
+        res.json({
+        success: true,
+        cart: cart
         });
     }
 });
