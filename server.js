@@ -28,7 +28,7 @@ global.user = null; // Lagra den inloggade användaren globalt
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/orders", orderRoutes);
 
 database.on("error", (error) => {
   console.error("Database connection error:", error);
