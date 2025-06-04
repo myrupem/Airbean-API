@@ -29,7 +29,7 @@ global.user = null; // Lagra den inloggade användaren globalt
 app.use("/api/cart", cartRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/menu", menuRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/orders", orderRoutes);
 app.use("/api/promotions", promotionRoutes);
 
 database.on("error", (error) => {
