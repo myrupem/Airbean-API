@@ -3,11 +3,13 @@ import User from "../models/user.js";
 import { generatePrefixedId } from "../utils/IdGenerator.js";
 import { createUser, findUserByUsername } from "../services/user.js";
 
+import { validateAuthBody } from "../middlewares/validators.js";
+
 const router = express.Router();
 
 // REGISTER
 // POST /api/auth/register
-router.post("/register", async (req, res) => {
+router.post("/register", validateAuthBody, async (req, res) => {
   const { username, password } = req.body;
 
   try {
@@ -37,7 +39,7 @@ router.post("/register", async (req, res) => {
 
 // LOGIN (eller fortsätt som gäst)
 // POST /api/auth/login
-router.post("/login", async (req, res) => {
+router.post("/login", validateAuthBody, async (req, res) => {
   const { username, password, continueAsGuest } = req.body;
 
   if (continueAsGuest) {

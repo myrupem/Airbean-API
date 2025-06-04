@@ -7,4 +7,6 @@ const menuSchema = new mongoose.Schema({
   price: Number
 }, { collection: 'products' }); // 👈 pekar på rätt collection
 
-export default mongoose.model('Menu', menuSchema);
+const Menu = mongoose.model('Menu', menuSchema);
+
+export default Menu;

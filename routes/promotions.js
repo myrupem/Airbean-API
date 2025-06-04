@@ -1,6 +1,8 @@
 import express from "express";
 import { createPromotion, getAllPromotions } from "../services/promotion.js";
 
+import { validatePromotion } from "../middlewares/validators.js";
+
 const router = express.Router();
 
 // GET all promotions
@@ -14,7 +16,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST create a new promotion
-router.post("/", async (req, res) => {
+router.post("/", validatePromotion, async (req, res) => {
   try {
     const promotion = await createPromotion(req.body);
     res.status(201).json({ success: true, promotion });
