@@ -52,3 +52,11 @@ export const updateCart = async (req, res, next) => {
     next(err);
   }
 };
+export async function getAllCarts() {
+  try {
+    return await Cart.find();
+  } catch (error) {
+    console.error("Failed to fetch carts:", error);
+    throw error;
+  }
+}
