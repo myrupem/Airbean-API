@@ -3,6 +3,9 @@ import { Router } from "express";
 import { getOrderByUserId, getAllOrders } from "../services/order.js";
 import { createOrder } from "../services/order.js";
 
+import { validateCartInBody } from "../middlewares/validators.js";
+import { validateUser } from "../middlewares/validators.js";
+
 const router = Router();
 
 // GET all orders - /api/orders
@@ -31,7 +34,7 @@ router.get("/", async (req, res, next) => {
 });
 
 // GET orders by user ID - /api/orders/:userId
-router.get("/:userId", async (req, res, next) => {
+router.get("/:userId", validateUser, async (req, res, next) => {
   const { userId } = req.params;
   console.log(`Fetching orders for user ID: ${userId}`);
 
@@ -46,8 +49,10 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
+
 //Create order route
-router.post("/", async (req, res) => {
+router.post("/", validateCartInBody, async (req, res) => {
+
   const { cartId } = req.body;
 
   try {
