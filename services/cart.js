@@ -3,6 +3,8 @@ import Cart from "../models/cart.js";
 import { generatePrefixedId } from "../utils/IdGenerator.js";
 
 export async function getCart(cartId) {
+  if (!cartId) throw new Error("Missing cartId");
+  
   try {
     const cart = await Cart.findOne({ cartId });
     if (!cart) {
