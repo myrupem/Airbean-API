@@ -19,23 +19,22 @@ export async function getCart(cartId) {
 export const updateCart = async (req, res, next) => {
   try {
     const { prodId, qty, guestId } = req.body;
-    const userId =
-      global.user?.userId || guestId || `${generatePrefixedId("guest")}`;
+    const userId = global.user?.userId || guestId || `${generatePrefixedId("guest")}`;
 
-    // Byt ut prefixet 'user-' eller 'guest-' mot 'cart-'
-    const cartId = userId.replace(/^(user|guest)-/, "cart-");
+     // Byt ut prefixet 'user-' eller 'guest-' mot 'cart-'
+    const cartId = userId.replace(/^(user|guest)-/, 'cart-');
 
     let cart = await Cart.findOne({ cartId });
 
     if (!cart) {
       cart = new Cart({
-        cartId: `cart-${uuidv4()}`,
+        cartId: cartId,
         userId,
-        items: [],
+        items: []
       });
     }
 
-    const index = cart.items.findIndex((item) => item.prodId === prodId);
+    const index = cart.items.findIndex(item => item.prodId === prodId);
 
     if (qty === 0) {
       if (index !== -1) cart.items.splice(index, 1);
